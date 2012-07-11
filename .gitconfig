@@ -1,0 +1,8 @@
+[user]
+	name = Albert Zeyer
+	email = albert.zeyer@rwth-aachen.de
+[diff]
+	renamelimit = 5000
+[core]
+	ignorecase = false
+	editor = /usr/bin/vim
