@@ -1,0 +1,2 @@
+raise Exception, "foo"
+
