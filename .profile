@@ -20,7 +20,8 @@ export PYTHONPATH="/Library/Python/2.7/site-packages/:/usr/local/lib/python2.7/s
 
 alias dosbox=/Applications/Spiele/DOSBox.app/Contents/MacOS/DOSBox
 
-export ARCHFLAGS="-arch x86_64"
+# Note that Sage fails to build with this:
+#export ARCHFLAGS="-arch x86_64"
 export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
 # TODO: this more general
