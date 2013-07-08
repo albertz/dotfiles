@@ -5,4 +5,10 @@
 	renamelimit = 5000
 [core]
 	ignorecase = false
-	editor = /usr/bin/vim
+	editor = vim
+	precomposeunicode = true
+[github]
+	user = albertz
+[push]
+	#default = simple
+	default = current
