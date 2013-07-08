@@ -1,3 +1,6 @@
+" not sure... https://github.com/gmarik/vundle/issues/175
+set shell=/bin/bash
+
  set nocompatible               " be iMproved
  filetype off                   " required!
 
@@ -12,16 +15,17 @@
  "
  " original repos on github
  Bundle 'tpope/vim-fugitive'
+Bundle 'Valloric/YouCompleteMe'
  Bundle 'Lokaltog/vim-easymotion'
  Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
- Bundle 'tpope/vim-rails.git'
+" Bundle 'tpope/vim-rails.git'
  " vim-scripts repos
  Bundle 'L9'
  Bundle 'FuzzyFinder'
  " non github repos
  Bundle 'git://git.wincent.com/command-t.git'
  " git repos on your local machine (ie. when working on your own plugin)
- Bundle 'file:///Users/gmarik/path/to/plugin'
+ "Bundle 'file:///Users/gmarik/path/to/plugin'
  " ...
 
  filetype plugin indent on     " required!
