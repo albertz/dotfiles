@@ -4,6 +4,8 @@ set shell=/bin/bash
  set nocompatible               " be iMproved
  filetype off                   " required!
 
+ set number
+
  set rtp+=~/.vim/bundle/vundle/
  call vundle#rc()
 
@@ -24,6 +26,7 @@ Bundle 'Valloric/YouCompleteMe'
  Bundle 'FuzzyFinder'
  " non github repos
  Bundle 'git://git.wincent.com/command-t.git'
+ Bundle 'jnwhiteh/vim-golang'
  " git repos on your local machine (ie. when working on your own plugin)
  "Bundle 'file:///Users/gmarik/path/to/plugin'
  " ...
