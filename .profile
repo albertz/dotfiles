@@ -38,3 +38,10 @@ export NODE_PATH=/usr/local:/usr/local/lib/node:/usr/local/lib/node_modules
 
 # for installing camliststore, it needs `pkg-config --cflags sqlite3` to work.
 export PKG_CONFIG_PATH=/usr/local/opt/sqlite/lib/pkgconfig/
+
+
+# For Octave.
+# http://stackoverflow.com/questions/13786754/octave-gnuplot-aquaterm-error-set-terminal-aqua-enhanced-title-figure-1-unk
+# http://www.mac-forums.com/forums/os-x-apps-games/242997-plots-octave-dont-work.html
+# https://github.com/mxcl/homebrew/issues/14647
+export GNUTERM=x11
