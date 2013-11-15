@@ -24,7 +24,9 @@ alias dosbox=/Applications/Spiele/DOSBox.app/Contents/MacOS/DOSBox
 # Note that Sage fails to build with this:
 #export ARCHFLAGS="-arch x86_64"
 
-export CFLAGS="--with-macos-sdk=/Developer/SDKs/MacOSX10.6.sdk -DMAC_OS_X_VERSION_MIN_REQUIRED=1060"
+export CC=cc
+export CXX=c++
+export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.6.sdk -DMAC_OS_X_VERSION_MIN_REQUIRED=1060"
 
 export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
