@@ -6,6 +6,9 @@ set shell=/bin/bash
 
  set number
 
+set encoding=utf-8
+syntax on
+
  set rtp+=~/.vim/bundle/vundle/
  call vundle#rc()
 
