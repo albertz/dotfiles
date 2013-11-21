@@ -30,6 +30,10 @@ Bundle 'Valloric/YouCompleteMe'
  " non github repos
  Bundle 'git://git.wincent.com/command-t.git'
  Bundle 'jnwhiteh/vim-golang'
+
+ Bundle 'utl.vim'
+Bundle 'albertz/vim-mouseclick'
+
  " git repos on your local machine (ie. when working on your own plugin)
  "Bundle 'file:///Users/gmarik/path/to/plugin'
  " ...
