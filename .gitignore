@@ -1,0 +1,7 @@
+/Downloads
+.viminfo
+*.pyc
+.DS_Store
+*.log
+fishd.*
+*_history
