@@ -26,7 +26,8 @@ alias dosbox=/Applications/Spiele/DOSBox.app/Contents/MacOS/DOSBox
 
 export CC=cc
 export CXX=c++
-export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.6.sdk -DMAC_OS_X_VERSION_MIN_REQUIRED=1060"
+
+#export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.6.sdk -DMAC_OS_X_VERSION_MIN_REQUIRED=1060"
 
 export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
@@ -47,3 +48,8 @@ export PKG_CONFIG_PATH=/usr/local/opt/sqlite/lib/pkgconfig/
 # http://www.mac-forums.com/forums/os-x-apps-games/242997-plots-octave-dont-work.html
 # https://github.com/mxcl/homebrew/issues/14647
 export GNUTERM=x11
+
+
+export NUPIC=~/Programmierung/nupic
+export NTA=$NUPIC/build
+
