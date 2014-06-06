@@ -5,6 +5,7 @@ export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="/Users/az/.gem/ruby/1.8/bin:$PATH"
 export PATH="/Users/az/.local/bin:$PATH"
 export PATH="/Users/az/Programmierung/system-tools/bin:$PATH"
+export PATH="/usr/local/kde4/bin:$PATH"
 
 alias m="/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/mpextended.mpBinaries/Contents/MacOS/mplayer"
 #alias m="/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
