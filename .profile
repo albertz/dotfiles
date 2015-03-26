@@ -18,7 +18,7 @@ export LANG=en_US.UTF-8
 
 
 #export PYTHONPATH=/Library/Frameworks/Python.framework/Versions/Current/lib/python2.5/site-packages/PIL
-export PYTHONPATH="/Library/Python/2.7/site-packages/:/usr/local/lib/python2.7/site-packages/"
+export PYTHONPATH="/usr/local/lib/python2.7/site-packages/:/Library/Python/2.7/site-packages/"
 
 alias dosbox=/Applications/Spiele/DOSBox.app/Contents/MacOS/DOSBox
 
@@ -37,6 +37,8 @@ export PYTHONPATH=~/Programmierung/mechanize:$PYTHONPATH
 export PYTHONPATH=~/Programmierung/pybrain:$PYTHONPATH
 export PYTHONPATH=~/Programmierung/scikit-learn:$PYTHONPATH
 export PYTHONPATH=~/Programmierung/requests:$PYTHONPATH
+export PYTHONPATH=~/Programmierung/py_better_exchook:$PYTHONPATH
+#export PYTHONPATH=~/Programmierung:$PYTHONPATH
 
 export NODE_PATH=/usr/local:/usr/local/lib/node:/usr/local/lib/node_modules
 
