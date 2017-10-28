@@ -3,9 +3,11 @@
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 #export PATH="$PATH:/opt/subversion/bin"
 export PATH="/Users/az/.gem/ruby/1.8/bin:$PATH"
+export PATH="/Users/az/.cargo/bin:$PATH"
 export PATH="/Users/az/.local/bin:$PATH"
 export PATH="/Users/az/Programmierung/system-tools/bin:$PATH"
 export PATH="/usr/local/kde4/bin:$PATH"
+export PATH="$PATH:/Users/az/Library/Python/2.7/bin"
 
 alias m="/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/mpextended.mpBinaries/Contents/MacOS/mplayer"
 #alias m="/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
@@ -55,4 +57,15 @@ export GNUTERM=x11
 
 export NUPIC=~/Programmierung/nupic
 export NTA=$NUPIC/build
+
+
+export PATH="$HOME/.cargo/bin:$PATH"
+
+
+# https://github.com/mobile-shell/mosh/issues/98
+# might need locale-gen?
+export LC_CTYPE="en_US.UTF-8"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 
