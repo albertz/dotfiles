@@ -1,7 +1,7 @@
 " not sure... https://github.com/gmarik/vundle/issues/175
 set shell=/bin/zsh
 
-set background=dark
+set background=light
 
  set nocompatible               " be iMproved
  filetype off                   " required!
