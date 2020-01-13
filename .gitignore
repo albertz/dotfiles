@@ -1,8 +1,14 @@
-/i6
-/Downloads
 .viminfo
 *.pyc
 .DS_Store
 *.log
 fishd.*
 *_history
+
+/i6
+/db
+/Downloads
+/mnt
+/node_modules
+/nltk_data*
+
