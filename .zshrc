@@ -67,3 +67,5 @@ source ~/.profile
 
 # . /sw/bin/init.sh
 
+
+source /Users/az/Library/Preferences/org.dystroy.broot/launcher/bash/br
