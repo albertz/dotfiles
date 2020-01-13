@@ -8,6 +8,7 @@ fishd.*
 *_history
 .histfile*
 .history*
+fish_history*
 .CFUserTextEncoding
 .cache
 .cint*
