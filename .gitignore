@@ -27,6 +27,24 @@ fish_history*
 /.vim
 /.vscode
 
+# other .config options, not interesting
+/.config/camlistore
+/.config/configstore
+/.config/creeperworld*
+/.config/CorsixTH
+/.config/darktable
+/.config/filezilla
+/.config/gedit
+/.config/gtk*
+/.config/htop
+/.config/inkscape
+/.config/libimobiledevice
+/.config/menus
+/.config/Nokia
+/.config/pulse
+/.config/QtProject
+/.config/xm1
+
 # other configs, which will probably never become interesting
 /.alacritty.yml
 /.FreeDoko
@@ -139,6 +157,7 @@ fish_history*
 /azwinvm*
 /Applications
 /alt-roots
+/bin
 /db
 /Desktop
 /Documents*
@@ -161,6 +180,7 @@ fish_history*
 /Programmierung
 /Public
 /Qt
+/Sikuli-scripts
 /Sites
 /Spiele
 /Tresors
