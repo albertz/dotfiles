@@ -21,6 +21,7 @@ fish_history*
 .git-credentials
 .gitk
 .*.tmp
+.tmp*
 
 # currently not interesting...
 /.atom
