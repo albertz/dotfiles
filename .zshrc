@@ -67,5 +67,8 @@ source ~/.profile
 
 # . /sw/bin/init.sh
 
+preexec () {
+    ~/Programmierung/system-tools/helpers/local-history-add.py $1 >/dev/null
+}
 
 source /Users/az/Library/Preferences/org.dystroy.broot/launcher/bash/br
