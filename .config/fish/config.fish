@@ -1,5 +1,9 @@
 # Fish shell
 
+function fish_preexec --on-event fish_preexec
+    ~/Programmierung/system-tools/helpers/local-history-add.py $argv & disown
+end
+
 egrep "^export " ~/.profile | while read e
 	set var (echo $e | sed -E "s/^export ([A-Z_]+)=(.*)\$/\1/")
 	set value (echo $e | sed -E "s/^export ([A-Z_]+)=(.*)\$/\2/")
@@ -23,4 +27,3 @@ egrep "^export " ~/.profile | while read e
 	#echo "set -xg '$var' '$value' (via '$e')"
 	set -xg $var $value
 end
-
