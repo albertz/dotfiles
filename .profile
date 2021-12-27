@@ -1,13 +1,20 @@
 #!/bin/bash
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-#export PATH="$PATH:/opt/subversion/bin"
+
+#eval "$(/opt/homebrew/bin/brew shellenv)"
+
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+export MANPATH="/opt/homebrew/share/man:$MANPATH"
+export INFOPATH="/opt/homebrew/share/info:$INFOPATH"
+
 export PATH="/Users/az/.gem/ruby/1.8/bin:$PATH"
 export PATH="/Users/az/.cargo/bin:$PATH"
 export PATH="/Users/az/.local/bin:$PATH"
 export PATH="/Users/az/Programmierung/system-tools/bin:$PATH"
-export PATH="/usr/local/kde4/bin:$PATH"
-#export PATH="$PATH:/Users/az/Library/Python/3.7/bin:/Users/az/Library/Python/2.7/bin"
 
 alias m="/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/mpextended.mpBinaries/Contents/MacOS/mplayer"
 #alias m="/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
@@ -32,7 +39,7 @@ export CXX=c++
 
 #export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.6.sdk -DMAC_OS_X_VERSION_MIN_REQUIRED=1060"
 
-export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
+#export PYTHONPATH=/usr/local/lib/python:$PYTHONPATH
 
 # TODO: this more general
 #export PYTHONPATH=~/Programmierung/mechanize:$PYTHONPATH
