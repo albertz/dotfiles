@@ -5,6 +5,7 @@
 .DS_Store
 *.log
 fishd.*
+fish_variables
 *_history
 .histfile*
 .history*
@@ -39,6 +40,7 @@ fish_history*
 /.config/gtk*
 /.config/htop
 /.config/inkscape
+/.config/lazarus
 /.config/libimobiledevice
 /.config/menus
 /.config/Nokia
@@ -60,6 +62,7 @@ fish_history*
 /.cabal
 /.cargo
 /.cmake
+/.conda
 /.cpan
 /.cups
 /.designer
@@ -156,6 +159,8 @@ fish_history*
 /.zsh_sessions
 
 # other data
+/annex
+/archive
 /azwinvm*
 /Applications
 /alt-roots
@@ -169,6 +174,7 @@ fish_history*
 /Google Drive
 /i6
 /Library
+/miniforge3
 /mnt
 /Movies
 /Music
