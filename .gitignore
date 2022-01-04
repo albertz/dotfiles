@@ -153,6 +153,7 @@ fish_history*
 /.winpdb_settings.cfg
 /.wireshark
 /.xnviewmp
+/.zsh_sessions
 
 # other data
 /azwinvm*
