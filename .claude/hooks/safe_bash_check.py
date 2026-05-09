@@ -67,6 +67,7 @@ SAFE = [
     r"^uniq\b",
     r"^awk\b",
     r"^cat\b",
+    r"^timeout\b",
     r"^true\b",
     r"^false\b",
     r"^(?:\S+/)?python[23]?\b",   # python / python3 / /path/to/python3 / ~/.venv/bin/python
