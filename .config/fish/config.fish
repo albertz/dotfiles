@@ -27,3 +27,6 @@ egrep "^export " ~/.profile | while read e
 	#echo "set -xg '$var' '$value' (via '$e')"
 	set -xg $var $value
 end
+
+# Added by Antigravity
+fish_add_path /Users/az/.antigravity/antigravity/bin
