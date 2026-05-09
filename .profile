@@ -76,3 +76,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 
+
+
+# Added by Toolbox App
+export PATH="$PATH:/Users/az/Library/Application Support/JetBrains/Toolbox/scripts"
