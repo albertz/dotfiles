@@ -8,6 +8,7 @@
 	editor = vim
 	precomposeunicode = true
 	excludesfile = /Users/az/.gitignore_global
+	autocrlf = input
 [github]
 	user = albertz
 [push]
@@ -16,3 +17,5 @@
 [url "git@github.com:"]
 	insteadOf = https://github.com/
 
+[init]
+	defaultBranch = main
