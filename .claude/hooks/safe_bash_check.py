@@ -50,7 +50,7 @@ parts = split_shell(cmd)
 SAFE = [
     r"^cd\b",
     # git read-only subcommands
-    r"^git\s+(?:status|log|diff|show|branch|remote|describe|rev-parse|ls-files|ls-tree|stash|tag|blame|grep|shortlog|reflog|for-each-ref|cat-file|config)\b",
+    r"^git\s+(?:-\S+\s+\S+\s+)*(?:status|log|diff|show|branch|remote|describe|rev-parse|ls-files|ls-tree|stash|tag|blame|grep|shortlog|reflog|for-each-ref|cat-file|config)\b",
     # sed without -i (read/parse only)
     r"^sed\s+(?!-i\b)",
     # common read-only unix tools
@@ -69,8 +69,7 @@ SAFE = [
     r"^cat\b",
     r"^true\b",
     r"^false\b",
-    r"^python3\b",
-    r"^python\b",
+    r"^(?:\S+/)?python[23]?\b",   # python / python3 / /path/to/python3 / ~/.venv/bin/python
 ]
 
 
