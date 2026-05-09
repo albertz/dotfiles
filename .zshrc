@@ -72,3 +72,6 @@ preexec () {
 }
 
 source /Users/az/Library/Preferences/org.dystroy.broot/launcher/bash/br
+
+eval "$(github-copilot-cli alias -- "$0")"
+
