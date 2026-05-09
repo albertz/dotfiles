@@ -24,6 +24,7 @@ fish_history*
 .*.tmp
 .tmp*
 *.backup
+*.bak
 
 # currently not interesting...
 /.atom
