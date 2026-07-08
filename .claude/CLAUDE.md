@@ -6,6 +6,8 @@ Have some timeout for tests, so that you don't wait too long. Some tests or scri
 
 Follow similar code style as in the remaining project.
 
+When writing prose (code comments, docstrings, multi-line strings, commit messages, PR/issue bodies, chat): break lines at clause/sentence boundaries (semantic line breaks), never wrap to a fixed column width -- the right edge must be visibly ragged. Before finalizing any such text, glance at its right edge; if consecutive lines end near the same column you wrapped by width, so rewrap. No em-dashes anywhere (use `--`).
+
 If there are test cases, make sure they pass (or if too many, those that are relevant for the things that were changed).
 
 Follow test-driven development: If sth does not work, write a test case, find individual issues, write simpler test cases, fix those, iterate.
