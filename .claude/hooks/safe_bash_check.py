@@ -105,9 +105,32 @@ SAFE = [
 ]
 
 
+def is_safe_rm(segment: str) -> bool:
+    """Allow ``rm`` only when every target lives under /tmp or /private/tmp.
+
+    Flags are ignored; every non-flag token must be a literal path under one of
+    those roots, with no shell expansion ($ ` ) and no parent traversal (..).
+    Anything else falls through to normal permission handling.
+    """
+    toks = segment.split()
+    if not toks or toks[0] != "rm":
+        return False
+    paths = [t.strip("'\"") for t in toks[1:] if not t.startswith("-")]
+    if not paths:
+        return False
+    for p in paths:
+        if any(ch in p for ch in "$`") or ".." in p:
+            return False
+        if not (p.startswith("/tmp/") or p.startswith("/private/tmp/")):
+            return False
+    return True
+
+
 def is_safe(segment: str) -> bool:
     segment = segment.strip()
-    return not segment or any(re.match(p, segment) for p in SAFE)
+    if not segment or is_safe_rm(segment):
+        return True
+    return any(re.match(p, segment) for p in SAFE)
 
 
 if all(is_safe(p) for p in parts):
