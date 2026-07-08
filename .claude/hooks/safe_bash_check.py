@@ -71,6 +71,37 @@ SAFE = [
     r"^true\b",
     r"^false\b",
     r"^(?:\S+/)?python[23]?\b",   # python / python3 / /path/to/python3 / ~/.venv/bin/python
+    # Debugger / binary inspection -- read-only with respect to source.
+    r"^lldb\b",
+    r"^gdb\b",
+    r"^nm\b",
+    r"^otool\b",
+    r"^objdump\b",
+    r"^readelf\b",
+    r"^file\b",
+    r"^strings\b",
+    r"^dsymutil\b",
+    # Process inspection / control (kill is process-targeted, not files).
+    r"^ps\b",
+    r"^kill\b",
+    r"^pkill\b",
+    r"^pgrep\b",
+    r"^sleep\b",
+    r"^xargs\b",
+    # Environment-prefixed commands: ``FOO=bar cmd args``.  Allow the
+    # prefix and recurse on the rest.  Simpler: accept any sequence of
+    # ``WORD=VALUE`` env assignments followed by any safe command.
+    r"^(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)+(?:lldb|gdb|nm|otool|ps|kill|sleep|xargs|head|tail|grep|cat|awk|sed|find|ls|wc|sort|uniq|tr|cut|tee|timeout|true|false|echo|printf|(?:\S+/)?python[23]?)\b",
+    # Shell control flow / pure compounds (no destructive subcommands).
+    r"^while\b",
+    r"^until\b",
+    r"^for\b",
+    r"^if\b",
+    r"^do\b",
+    r"^done\b",
+    r"^fi\b",
+    r"^then\b",
+    r"^else\b",
 ]
 
 
