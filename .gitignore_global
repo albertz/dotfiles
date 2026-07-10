@@ -1,3 +1,5 @@
 .DS_Store
 .history*
 worktrees
+
+**/.claude/settings.local.json
