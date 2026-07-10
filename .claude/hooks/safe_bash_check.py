@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """
-Auto-allow bash commands that are composed entirely of safe read-only operations.
-Splits compound commands on &&, ;, | and checks each segment against an allowlist.
-Prints {"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "allow"}}
-if safe; prints nothing to fall through to normal permission handling otherwise.
-"""
-import json, sys, re
+Auto-allow bash commands so Claude Code stops prompting for the routine ones.
 
-data = json.load(sys.stdin)
-cmd = data.get("tool_input", {}).get("command", "")
+Two tiers:
+  1. Read-only / harmless commands,
+     allowed anywhere (any project, any branch).
+  2. OpenLieroX dev commands,
+     allowed only when the cwd is inside the OLX repo.
+     Non-destructive OLX commands (build, test, run, read-only git/gh)
+     are allowed on any branch;
+     history/outbound writes (git commit/push/checkout, gh pr, ...)
+     are allowed only when the current branch is not master/main --
+     i.e. when we are on an own working branch, never on the protected trunk.
+
+Compound commands are split on &&, ;, | and every segment must pass.
+Prints a PreToolUse "allow" decision if all segments pass;
+prints nothing (falls through to normal permission handling) otherwise.
+"""
+from __future__ import annotations
+import json, sys, re, os, subprocess
 
 
 def split_shell(cmd: str) -> list[str]:
@@ -44,8 +54,6 @@ def split_shell(cmd: str) -> list[str]:
     parts.append("".join(current))
     return parts
 
-
-parts = split_shell(cmd)
 
 SAFE = [
     r"^cd\b",
@@ -104,6 +112,46 @@ SAFE = [
     r"^else\b",
 ]
 
+# OpenLieroX dev commands that are non-destructive: safe on any branch, so long
+# as the cwd is inside the OLX repo.  Build, test, run, and local-only git/gh.
+OLX_SAFE = [
+    r"^cmake\b",
+    r"^ninja\b",
+    r"^make\b",
+    r"^ctest\b",
+    r"^meson\b",
+    r"^chmod\b",
+    r"^mkdir\b",
+    r"^cp\b",
+    r"^mv\b",
+    r"^ln\b",
+    r"^touch\b",
+    r"^patchelf\b",
+    r"^install_name_tool\b",
+    r"^dylibbundler\b",
+    r"^sdl2-config\b",
+    r"^pkg-config\b",
+    r"^bash\s+-n\b",
+    r"^brew\s+(?:list|--prefix|info)\b",
+    # OLX build products and headless harness (relative or worktree-absolute).
+    r"^(?:\S*/)?build[\w./-]*/bin/openlierox\b",
+    r"^(?:\./)?tests/headless/\S+\.sh\b",
+    r"^(?:\S*/)?tests/headless/\S+\.sh\b",
+    r"^(?:\S*/)?pytest\b",
+    # local-only git (no history rewrite, nothing leaves the machine)
+    r"^git\s+(?:fetch|add|stash|restore|merge-base)\b",
+    # gh read paths
+    r"^gh\s+(?:issue|run|api|search|repo|release\s+view|release\s+list)\b",
+]
+
+# OpenLieroX git/gh writes: allowed only on an own branch (never master/main).
+OLX_WRITE = [
+    r"^git\s+(?:commit|push|checkout|switch|merge|rebase|reset|cherry-pick|branch|tag|rm|mv|apply|clean|pull)\b",
+    r"^gh\s+(?:pr|release)\b",
+]
+
+PROTECTED_BRANCHES = {"master", "main", "HEAD"}
+
 
 def is_safe_rm(segment: str) -> bool:
     """Allow ``rm`` only when every target lives under /tmp or /private/tmp.
@@ -133,10 +181,74 @@ def is_safe(segment: str) -> bool:
     return any(re.match(p, segment) for p in SAFE)
 
 
-if all(is_safe(p) for p in parts):
-    print(json.dumps({
-        "hookSpecificOutput": {
-            "hookEventName": "PreToolUse",
-            "permissionDecision": "allow",
-        }
-    }))
+def strip_env(segment: str) -> str:
+    """Drop a leading ``env`` and any ``WORD=VALUE`` assignment prefixes."""
+    s = segment.strip()
+    m = re.match(r"^env\s+", s)
+    if m:
+        s = s[m.end():]
+    while True:
+        m = re.match(r"^[A-Za-z_][A-Za-z0-9_]*=\S*\s+", s)
+        if not m:
+            break
+        s = s[m.end():]
+    return s
+
+
+def in_olx(cwd: str) -> bool:
+    """True when the working directory is inside the OpenLieroX repo (or a worktree)."""
+    return "/Programmierung/openlierox" in (cwd or "")
+
+
+def git_branch(cwd: str) -> str | None:
+    """Current branch name, or None if it can't be determined (treated as protected)."""
+    r = subprocess.run(
+        ["git", "-C", cwd, "rev-parse", "--abbrev-ref", "HEAD"],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        return None
+    return r.stdout.strip() or None
+
+
+def is_olx_dev_safe(segment: str, branch: str | None) -> bool:
+    """Whether an OLX dev command may auto-run given the current branch."""
+    if is_safe(segment):
+        return True
+    s = strip_env(segment)
+    if not s:
+        return True
+    if any(re.match(p, s) for p in OLX_SAFE):
+        return True
+    on_own_branch = branch is not None and branch not in PROTECTED_BRANCHES
+    if on_own_branch and any(re.match(p, s) for p in OLX_WRITE):
+        return True
+    return False
+
+
+def decide(cmd: str, cwd: str) -> bool:
+    """Return True if every segment of ``cmd`` may be auto-allowed."""
+    parts = split_shell(cmd)
+    if all(is_safe(p) for p in parts):
+        return True
+    if in_olx(cwd):
+        branch = git_branch(cwd)
+        return all(is_olx_dev_safe(p, branch) for p in parts)
+    return False
+
+
+def main() -> None:
+    data = json.load(sys.stdin)
+    cmd = data.get("tool_input", {}).get("command", "")
+    cwd = data.get("cwd") or os.getcwd()
+    if decide(cmd, cwd):
+        print(json.dumps({
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "allow",
+            }
+        }))
+
+
+if __name__ == "__main__":
+    main()
