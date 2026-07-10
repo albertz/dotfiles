@@ -1,0 +1,88 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git describe:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git ls-remote:*)",
+      "Bash(git stash list:*)",
+      "Bash(git tag:*)",
+      "Bash(git blame:*)",
+      "Bash(git grep:*)",
+      "Bash(git shortlog:*)",
+      "Bash(git reflog:*)",
+      "Bash(git config --get:*)",
+      "Bash(git config --list:*)",
+      "Bash(git cat-file:*)",
+      "Bash(git for-each-ref:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(sed:*)",
+
+      "Bash(cmake:*)",
+      "Bash(ninja:*)",
+      "Bash(make:*)",
+      "Bash(ctest:*)",
+
+      "Bash(python3 -m pytest:*)",
+      "Bash(python3 -m py_compile:*)",
+      "Bash(pytest:*)",
+
+      "Bash(file:*)",
+      "Bash(otool:*)",
+      "Bash(nm:*)",
+      "Bash(strings:*)",
+      "Bash(readelf:*)",
+      "Bash(objdump:*)",
+      "Bash(sdl2-config:*)",
+      "Bash(pkg-config:*)",
+      "Bash(brew list:*)",
+
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run watch:*)",
+
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/safe_bash_check.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/prose-wrap-lint.py"
+          }
+        ]
+      }
+    ]
+  },
+  "theme": "dark"
+}
