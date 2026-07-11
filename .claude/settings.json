@@ -80,6 +80,10 @@
         "hooks": [
           {
             "type": "command",
+            "command": "python3 ~/.claude/hooks/branch_name_guard.py"
+          },
+          {
+            "type": "command",
             "command": "python3 ~/.claude/hooks/safe_bash_check.py"
           }
         ]
