@@ -1,5 +1,8 @@
 {
   "permissions": {
+    "additionalDirectories": [
+      "/Users/az/Programmierung/openlierox"
+    ],
     "allow": [
       "Bash(git status:*)",
       "Bash(git log:*)",
@@ -61,6 +64,16 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/inject_contributing.py"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
