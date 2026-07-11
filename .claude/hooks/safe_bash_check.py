@@ -138,8 +138,10 @@ OLX_SAFE = [
     r"^(?:\./)?tests/headless/\S+\.sh\b",
     r"^(?:\S*/)?tests/headless/\S+\.sh\b",
     r"^(?:\S*/)?pytest\b",
-    # local-only git (no history rewrite, nothing leaves the machine)
-    r"^git\s+(?:fetch|add|stash|restore|merge-base|worktree)\b",
+    # local-only git (no history rewrite, nothing leaves the machine).
+    # Tolerate leading global options (-C <dir>, -c k=v) like the read matcher,
+    # so cross-worktree ``git -C <path> restore`` etc. auto-approve too.
+    r"^git\s+(?:-\S+\s+\S+\s+)*(?:fetch|add|stash|restore|merge-base|worktree)\b",
     # gh read paths
     r"^gh\s+(?:issue|run|api|search|repo|auth\s+status|release\s+view|release\s+list)\b",
 ]
