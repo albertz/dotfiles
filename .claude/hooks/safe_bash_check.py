@@ -139,9 +139,9 @@ OLX_SAFE = [
     r"^(?:\S*/)?tests/headless/\S+\.sh\b",
     r"^(?:\S*/)?pytest\b",
     # local-only git (no history rewrite, nothing leaves the machine)
-    r"^git\s+(?:fetch|add|stash|restore|merge-base)\b",
+    r"^git\s+(?:fetch|add|stash|restore|merge-base|worktree)\b",
     # gh read paths
-    r"^gh\s+(?:issue|run|api|search|repo|release\s+view|release\s+list)\b",
+    r"^gh\s+(?:issue|run|api|search|repo|auth\s+status|release\s+view|release\s+list)\b",
 ]
 
 # OpenLieroX git/gh writes: allowed only on an own branch (never master/main).
