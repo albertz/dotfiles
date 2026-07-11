@@ -58,7 +58,7 @@ def split_shell(cmd: str) -> list[str]:
 SAFE = [
     r"^cd\b",
     # git read-only subcommands
-    r"^git\s+(?:-\S+\s+\S+\s+)*(?:status|log|diff|show|branch|remote|describe|rev-parse|ls-files|ls-tree|stash|tag|blame|grep|shortlog|reflog|for-each-ref|cat-file|config)\b",
+    r"^git\s+(?:-\S+(?:\s+\S+)?\s+)*(?:status|log|diff|show|branch|remote|describe|rev-parse|ls-files|ls-tree|stash|tag|blame|grep|shortlog|reflog|for-each-ref|cat-file|config)\b",
     # sed without -i (read/parse only)
     r"^sed\s+(?!-i\b)",
     # common read-only unix tools
@@ -140,19 +140,21 @@ OLX_SAFE = [
     r"^(?:\S*/)?tests/headless/\S+\.sh\b",
     r"^(?:\S*/)?pytest\b",
     # local-only git (no history rewrite, nothing leaves the machine).
-    # Tolerate leading global options (-C <dir>, -c k=v) like the read matcher,
+    # Tolerate leading global options, valued (-C <dir>, -c k=v)
+    # or bare (--no-pager, --paginate), like the read matcher,
     # so cross-worktree ``git -C <path> restore`` etc. auto-approve too.
-    r"^git\s+(?:-\S+\s+\S+\s+)*(?:fetch|add|stash|restore|merge-base|worktree)\b",
+    r"^git\s+(?:-\S+(?:\s+\S+)?\s+)*(?:fetch|add|stash|restore|merge-base|worktree)\b",
     # gh read paths
     r"^gh\s+(?:issue|run|api|search|repo|auth\s+status|release\s+view|release\s+list)\b",
 ]
 
 # OpenLieroX git/gh writes: allowed only on an own branch (never master/main).
 OLX_WRITE = [
-    # Tolerate leading global options (-C <dir>, -c k=v) like the read matcher,
+    # Tolerate leading global options, valued (-C <dir>, -c k=v)
+    # or bare (--no-pager), like the read matcher,
     # so cross-worktree ``git -C <path> commit/apply/checkout`` auto-approve too.
     # The branch gate below uses the -C target's branch, so master stays protected.
-    r"^git\s+(?:-\S+\s+\S+\s+)*(?:commit|push|checkout|switch|merge|rebase|reset|cherry-pick|branch|tag|rm|mv|apply|clean|pull)\b",
+    r"^git\s+(?:-\S+(?:\s+\S+)?\s+)*(?:commit|push|checkout|switch|merge|rebase|reset|cherry-pick|branch|tag|rm|mv|apply|clean|pull)\b",
     r"^gh\s+(?:pr|release)\b",
 ]
 
@@ -201,6 +203,28 @@ def strip_env(segment: str) -> str:
     return s
 
 
+def strip_script(segment: str) -> str:
+    """Drop a leading ``script [flags] /dev/null `` pty wrapper, leaving the run command.
+
+    ``script -q /dev/null <cmd>`` just runs <cmd> on a pty (to exercise the
+    interactive stdin path); the safety is entirely that of <cmd>, so peel the
+    wrapper and let the inner command be judged on its own.
+    """
+    s = segment.strip()
+    m = re.match(r"^script\s+(?:-\S+\s+)*/dev/null\s+", s)
+    return s[m.end():] if m else s
+
+
+def unwrap(segment: str) -> str:
+    """Peel ``env``/``WORD=VALUE`` and ``script .. /dev/null`` wrappers until stable."""
+    s = segment.strip()
+    while True:
+        stripped = strip_script(strip_env(s))
+        if stripped == s:
+            return s
+        s = stripped
+
+
 def in_olx(cwd: str) -> bool:
     """True when the working directory is inside the OpenLieroX repo (or a worktree)."""
     return "/Programmierung/openlierox" in (cwd or "")
@@ -232,9 +256,9 @@ def git_branch(cwd: str) -> str | None:
 
 def is_olx_dev_safe(segment: str, branch: str | None) -> bool:
     """Whether an OLX dev command may auto-run given the current branch."""
-    if is_safe(segment):
+    s = unwrap(segment)
+    if is_safe(s):
         return True
-    s = strip_env(segment)
     if not s:
         return True
     if any(re.match(p, s) for p in OLX_SAFE):
