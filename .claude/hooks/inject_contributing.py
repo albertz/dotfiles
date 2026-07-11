@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import subprocess
 import sys
 
 MARKER = "Contributing to OpenLieroX"
@@ -16,6 +18,16 @@ MARKER = "Contributing to OpenLieroX"
 def project_dir(data: dict) -> str:
     """Session project root: the worktree for worktree sessions, else the repo."""
     return os.environ.get("CLAUDE_PROJECT_DIR") or data.get("cwd") or os.getcwd()
+
+
+def harness_branch(cwd: str) -> str:
+    """Current branch if it is still the harness default (``claude/...``), else ""."""
+    r = subprocess.run(
+        ["git", "-C", cwd, "rev-parse", "--abbrev-ref", "HEAD"],
+        capture_output=True, text=True,
+    )
+    branch = r.stdout.strip() if r.returncode == 0 else ""
+    return branch if branch.startswith("claude/") else ""
 
 
 def main() -> None:
@@ -35,6 +47,17 @@ def main() -> None:
         "Auto-loaded CONTRIBUTING.md (the binding contributor rules for this repo; "
         "follow it without needing a reminder):\n\n" + text
     )
+
+    branch = harness_branch(project_dir(data))
+    if branch:
+        context = (
+            "ACTION REQUIRED before you start: you are on the harness default "
+            "branch '" + branch + "'. Rename it now to a short descriptive name "
+            "carrying the issue number, e.g.\n"
+            "  git branch -m fix-<issue>-<slug>\n"
+            "(a push of a 'claude/...' branch is blocked until you do). "
+            "Then proceed.\n\n" + context
+        )
     json.dump({
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",

@@ -134,7 +134,8 @@ OLX_SAFE = [
     r"^bash\s+-n\b",
     r"^brew\s+(?:list|--prefix|info)\b",
     # OLX build products and headless harness (relative or worktree-absolute).
-    r"^(?:\S*/)?build[\w./-]*/bin/openlierox\b",
+    # openlierox is the game; olx_tests is the unit-test binary.
+    r"^(?:\S*/)?build[\w./-]*/bin/(?:openlierox|olx_tests)\b",
     r"^(?:\./)?tests/headless/\S+\.sh\b",
     r"^(?:\S*/)?tests/headless/\S+\.sh\b",
     r"^(?:\S*/)?pytest\b",
@@ -148,7 +149,10 @@ OLX_SAFE = [
 
 # OpenLieroX git/gh writes: allowed only on an own branch (never master/main).
 OLX_WRITE = [
-    r"^git\s+(?:commit|push|checkout|switch|merge|rebase|reset|cherry-pick|branch|tag|rm|mv|apply|clean|pull)\b",
+    # Tolerate leading global options (-C <dir>, -c k=v) like the read matcher,
+    # so cross-worktree ``git -C <path> commit/apply/checkout`` auto-approve too.
+    # The branch gate below uses the -C target's branch, so master stays protected.
+    r"^git\s+(?:-\S+\s+\S+\s+)*(?:commit|push|checkout|switch|merge|rebase|reset|cherry-pick|branch|tag|rm|mv|apply|clean|pull)\b",
     r"^gh\s+(?:pr|release)\b",
 ]
 
@@ -202,6 +206,19 @@ def in_olx(cwd: str) -> bool:
     return "/Programmierung/openlierox" in (cwd or "")
 
 
+def git_c_target(segment: str) -> str | None:
+    """The directory of a ``git -C <dir>`` command, else None.
+
+    A ``git -C <dir>`` command acts on <dir>, not the shell's cwd,
+    so its OLX-ness and branch must be judged there.
+    """
+    s = strip_env(segment)
+    if not re.match(r"^git\b", s):
+        return None
+    m = re.search(r"(?:^|\s)-C\s+(\S+)", s)
+    return m.group(1).strip("'\"") if m else None
+
+
 def git_branch(cwd: str) -> str | None:
     """Current branch name, or None if it can't be determined (treated as protected)."""
     r = subprocess.run(
@@ -233,10 +250,15 @@ def decide(cmd: str, cwd: str) -> bool:
     parts = split_shell(cmd)
     if all(is_safe(p) for p in parts):
         return True
-    if in_olx(cwd):
-        branch = git_branch(cwd)
-        return all(is_olx_dev_safe(p, branch) for p in parts)
-    return False
+    # Judge each segment against the repo it acts on: a ``git -C <dir>``
+    # command targets <dir>, everything else targets the shell's cwd.
+    for p in parts:
+        target = git_c_target(p) or cwd
+        if not in_olx(target):
+            return False
+        if not is_olx_dev_safe(p, git_branch(target)):
+            return False
+    return True
 
 
 def main() -> None:
