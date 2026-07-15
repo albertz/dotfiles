@@ -78,6 +78,31 @@ SAFE = [
     r"^timeout\b",
     r"^true\b",
     r"^false\b",
+    r"^tr\b",
+    r"^cut\b",
+    r"^column\b",
+    r"^diff\b",
+    r"^cmp\b",
+    # Read-only lookup / inspection commands.
+    # These get mixed into dev one-liners (e.g. ``which python3``);
+    # without them the whole segment falls through to a permission prompt,
+    # reported as "simple_expansion" when the line also contains a ~ path.
+    r"^which\b",
+    r"^type\b",
+    r"^command\s+-v\b",
+    r"^whoami\b",
+    r"^id\b",
+    r"^pwd\b",
+    r"^dirname\b",
+    r"^basename\b",
+    r"^realpath\b",
+    r"^readlink\b",
+    r"^date\b",
+    r"^uname\b",
+    r"^hostname\b",
+    r"^stat\b",
+    r"^du\b",
+    r"^df\b",
     r"^(?:\S+/)?python[23]?\b",   # python / python3 / /path/to/python3 / ~/.venv/bin/python
     # Debugger / binary inspection -- read-only with respect to source.
     r"^lldb\b",
@@ -190,13 +215,23 @@ def is_safe(segment: str) -> bool:
 
 
 def strip_env(segment: str) -> str:
-    """Drop a leading ``env`` and any ``WORD=VALUE`` assignment prefixes."""
+    """Drop a leading ``env``/``export`` and any ``WORD=VALUE`` assignment prefixes.
+
+    ``export`` never invokes a command (its args are names/assignments),
+    and each ;/&&/| segment is judged on its own,
+    so peeling it and judging the remainder is safe.
+    """
     s = segment.strip()
-    m = re.match(r"^env\s+", s)
+    m = re.match(r"^(?:env|export)\s+", s)
     if m:
         s = s[m.end():]
+    # Peel WORD=VALUE assignments, including a bare one at the end of the
+    # segment (e.g. ``export FOO=/path``).  Only literal values are peeled:
+    # a value with $ or a backtick is command substitution and must never be
+    # silently approved, so it is left for normal confirmation.
+    assign = r"""^[A-Za-z_][A-Za-z0-9_]*=(?:"[^"$`]*"|'[^'`]*'|[^\s$`'"]*)(?:\s+|$)"""
     while True:
-        m = re.match(r"^[A-Za-z_][A-Za-z0-9_]*=\S*\s+", s)
+        m = re.match(assign, s)
         if not m:
             break
         s = s[m.end():]
